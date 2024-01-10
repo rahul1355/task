@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <div class="jumbotron">
+        <h1>List of Pending tasks</h1>
+        <table class="table" border="2px" cellpadding="5px">
+            <tr>
+              <th>TaskName</th>
+              <th>Assigned to</th>
+              <th>Assigned by</th>
+              <th>Review</th>
+              <th>Edit</th>
+              <th>Delete</th>
+              <th>Priority</th>
+            </tr>
+              {% for task in tasks %}
+                  {% if task.review %}
+                      <tr class="table-success">
+                          <td>{{ task.task_name }}</td>
+                          <td>{{ task.assingned_to }}</td>
+                          <td>{{ task.assigned_by }}</td>
+                          <td>Completed</td>
+                          <td><a href="#">Edit</a></td>
+                          <td><a href="#">Delete</a></td>
+                          <td>
+                              {% if task.priority == 'high' or task.priority == 'High' %}
+                                  <p><i class='bx bxs-bell-ring'></i></p>
+                              {% elif task.priority == 'medium' or task.priority == 'Medium' %}
+                                  <p><i class='bx bxl-medium-square'></i></p>
+                              {% elif task.priority == 'low' or task.priority == 'Low' %}
+                                  <p><i class='bx bxs-alarm-snooze' ></i></p>
+                              {% endif %}
+                          </td>
+                      </tr>
+                  {% endif %}
+              {% endfor %}
+          </table>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="jumbotron">
+            <br>
+            <p>
+                <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                  Add Tasks &nbsp;&nbsp;<i class='bx bx-plus-circle'></i>
+                </a>
+              </p>
+              <div class="collapse" id="collapseExample">
+                <div class="card card-body">
+                  <h4>Add new task</h4>
+                  <form method="POST">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <input type="submit" class="btn btn-primary" value="Add task">
+                  </form>
+                </div>
+              </div>
+        <h1>Task list</h1>
+        <table class="table" border="2px" cellpadding="5px">
+          <tr>
+            <th>TaskName</th>
+            <th>Assigned to</th>
+            <th>Assigned by</th>
+            <th>Review</th>
+            <th>Edit</th>
+            <th>Delete</th>
+            <th>Priority</th>
+          </tr>
+            {% for task in tasks %}
+                {% if task.review %}
+                    <tr class="table-success">
+                        <td>{{ task.task_name }}</td>
+                        <td>{{ task.assingned_to }}</td>
+                        <td>{{ task.assigned_by }}</td>
+                        <td>Completed</td>
+                        <td><a href="{% url 'edit' pk=task.id %}" class="btn btn-warning">Edit</a></td>
+                        <td><a href="{% url 'delete' pk=task.id %}" class="btn btn-danger">Delete</a></td>
+                        <td>
+                            {% if task.priority == 'high' or task.priority == 'High' %}
+                                <p><i class='bx bxs-bell-ring'></i></p>
+                            {% elif task.priority == 'medium' or task.priority == 'Medium' %}
+                                <p><i class='bx bxl-medium-square'></i></p>
+                            {% elif task.priority == 'low' or task.priority == 'Low' %}
+                                <p><i class='bx bxs-alarm-snooze' ></i></p>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td>{{ task.task_name }}</td>
+                        <td>{{ task.assingned_to }}</td>
+                        <td>{{ task.assigned_by }}</td>
+                        <td>Not completed</td>
+                        <td><a href="{% url 'edit' pk=task.id %}" class="btn btn-warning">Edit</a></td>
+                        <td><a href="{% url 'delete' pk=task.id %}" class="btn btn-danger">Delete</a></td>
+                        <td>
+                            {% if task.priority == 'high' or task.priority == 'High' %}
+                                <p><i class='bx bxs-bell-ring'></i></p>
+                            {% elif task.priority == 'medium' or task.priority == 'Medium' %}
+                                <p><i class='bx bxl-medium-square'></i></p>
+                            {% elif task.priority == 'low' or task.priority == 'Low' %}
+                                <p><i class='bx bxs-alarm-snooze' ></i></p>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+              <li class="page-item"><a class="page-link" href="?pg=1"><<</a></li>
+                {% if tasks.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?pg={{ tasks.previous_page_number }}">{{ tasks.previous_page_number }}</a>
+                    </li>
+                {% endif %}
+                <li class="page-item">
+                    <a class="page-link" href="?pg={{ tasks.number }}">{{ tasks.number }}</a>
+                </li>
+                {% if tasks.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?pg={{ tasks.next_page_number }}">{{ tasks.next_page_number }}</a>
+                    </li>
+                {% endif %}
+                <li class="page-item">
+                    <a class="page-link" href="?pg={{ tasks.paginator.num_pages }}">>></a>
+                </li>
+            </ul>
+        </nav>
+        </div>
+    </div>
+
+{% endblock %}
